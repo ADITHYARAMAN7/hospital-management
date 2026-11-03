@@ -1,0 +1,1 @@
+{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["s3:GetObject","s3:GetObjectTagging","s3:PutObjectTagging"],"Resource":"arn:aws:s3:::hospital-medical-records-937083180364/*"}]}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>City Care Hospital – Patient Appointment Portal</title>
+  <meta name="description" content="Hospital Management System – register patient appointments (AWS Amplify + Lambda + Amazon RDS)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b7285'/><path d='M13 7h6v6h6v6h-6v6h-6v-6H7v-6h6z' fill='white'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M13 7h6v6h6v6h-6v6h-6v-6H7v-6h6z"/></svg>
+      <div>
+        <h1>City Care Hospital</h1>
+        <p>Hospital Management System · Patient Appointment Portal</p>
+      </div>
+    </div>
+    <div class="status" id="apiStatus" title="Connection to Amazon RDS via AWS Lambda">
+      <span class="dot"></span><span id="apiStatusText">Connecting to database…</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ===== Patient form ===== -->
+    <section class="card form-card" aria-labelledby="formTitle">
+      <div class="card-head">
+        <h2 id="formTitle">New Patient Appointment</h2>
+        <p>Enter the patient details and submit to save them in the hospital database.</p>
+      </div>
+
+      <form id="patientForm" novalidate>
+        <div class="field">
+          <label for="patientId">Patient ID</label>
+          <input type="text" id="patientId" name="patientId" placeholder="e.g. P1006" maxlength="9" autocomplete="off" required>
+          <small class="hint">Format: letter P followed by digits</small>
+          <small class="error" id="patientId-error"></small>
+        </div>
+
+        <div class="field">
+          <label for="patientName">Patient Name</label>
+          <input type="text" id="patientName" name="patientName" placeholder="e.g. Ananya Krishnan" maxlength="100" autocomplete="off" required>
+          <small class="error" id="patientName-error"></small>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="department">Department</label>
+            <select id="department" name="department" required>
+              <option value="">Select department</option>
+              <option>Cardiology</option>
+              <option>Dermatology</option>
+              <option>Emergency</option>
+              <option>ENT</option>
+              <option>General Medicine</option>
+              <option>Gynecology</option>
+              <option>Neurology</option>
+              <option>Oncology</option>
+              <option>Orthopedics</option>
+              <option>Pathology</option>
+              <option>Pediatrics</option>
+              <option>Radiology</option>
+            </select>
+            <small class="error" id="department-error"></small>
+          </div>
+
+          <div class="field">
+            <label for="appointmentDate">Appointment Date</label>
+            <input type="date" id="appointmentDate" name="appointmentDate" required>
+            <small class="error" id="appointmentDate-error"></small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn primary" id="submitBtn">
+            <span class="btn-label">Submit</span><span class="spinner" aria-hidden="true"></span>
+          </button>
+          <button type="reset" class="btn secondary" id="resetBtn">Reset</button>
+        </div>
+      </form>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- ===== Live records ===== -->
+    <section class="card records-card" aria-labelledby="recordsTitle">
+      <div class="card-head with-action">
+        <div>
+          <h2 id="recordsTitle">Patient Records</h2>
+          <p>Live from Amazon RDS MySQL · <code>HospitalDB.PatientRecords</code></p>
+        </div>
+        <button class="btn ghost" id="refreshBtn" type="button" title="Reload records">&#x21bb; Refresh</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span class="stat-num" id="statTotal">–</span><span class="stat-label">Total patients</span></div>
+        <div class="stat"><span class="stat-num" id="statDepts">–</span><span class="stat-label">Departments</span></div>
+        <div class="stat"><span class="stat-num" id="statToday">–</span><span class="stat-label">Added today</span></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Patient ID</th><th>Patient Name</th><th>Department</th><th>Appointment</th></tr>
+          </thead>
+          <tbody id="recordsBody">
+            <tr><td colspan="4" class="empty">Loading records…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="arch">
+      <span class="chip">AWS Amplify Hosting</span><span class="arrow">→</span>
+      <span class="chip">AWS Lambda (HospitalVPC, private subnet)</span><span class="arrow">→</span>
+      <span class="chip">Amazon RDS MySQL · HospitalDB</span>
+    </div>
+    <p>Cloud Computing Lab · Hospital Management System on AWS</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

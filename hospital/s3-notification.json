@@ -1,0 +1,1 @@
+{"LambdaFunctionConfigurations":[{"Id":"MedicalReportUploadTrigger","LambdaFunctionArn":"arn:aws:lambda:us-east-1:937083180364:function:MedicalReportProcessor","Events":["s3:ObjectCreated:*"]}]}

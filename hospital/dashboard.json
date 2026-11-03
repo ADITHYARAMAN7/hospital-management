@@ -1,0 +1,91 @@
+{
+  "start": "-PT3H",
+  "periodOverride": "inherit",
+  "widgets": [
+    {
+      "type": "text", "x": 0, "y": 0, "width": 24, "height": 2,
+      "properties": {
+        "markdown": "# 🏥 Hospital Monitoring Dashboard\nLambda **MedicalReportProcessor** — triggered by uploads to S3 bucket `hospital-medical-records-937083180364` (diagnostic images & medical reports). Invalid uploads (wrong file type / empty file) are rejected and appear as **Errors**."
+      }
+    },
+    {
+      "type": "metric", "x": 0, "y": 2, "width": 8, "height": 6,
+      "properties": {
+        "title": "Invocations (uploads processed)",
+        "view": "timeSeries", "stacked": false, "region": "us-east-1", "period": 60, "stat": "Sum",
+        "metrics": [["AWS/Lambda", "Invocations", "FunctionName", "MedicalReportProcessor", {"label": "Invocations", "color": "#0b7285"}]],
+        "yAxis": {"left": {"min": 0}}
+      }
+    },
+    {
+      "type": "metric", "x": 8, "y": 2, "width": 8, "height": 6,
+      "properties": {
+        "title": "Errors (rejected documents)",
+        "view": "timeSeries", "stacked": false, "region": "us-east-1", "period": 60, "stat": "Sum",
+        "metrics": [["AWS/Lambda", "Errors", "FunctionName", "MedicalReportProcessor", {"label": "Errors", "color": "#d62728"}]],
+        "yAxis": {"left": {"min": 0}}
+      }
+    },
+    {
+      "type": "metric", "x": 16, "y": 2, "width": 8, "height": 6,
+      "properties": {
+        "title": "Duration (ms)",
+        "view": "timeSeries", "stacked": false, "region": "us-east-1", "period": 60,
+        "metrics": [
+          ["AWS/Lambda", "Duration", "FunctionName", "MedicalReportProcessor", {"stat": "Average", "label": "Average", "color": "#1f77b4"}],
+          ["...", {"stat": "Maximum", "label": "Maximum", "color": "#ff7f0e"}],
+          ["...", {"stat": "Minimum", "label": "Minimum", "color": "#2ca02c"}]
+        ],
+        "yAxis": {"left": {"min": 0}}
+      }
+    },
+    {
+      "type": "metric", "x": 0, "y": 8, "width": 6, "height": 4,
+      "properties": {
+        "title": "Total invocations (3h)", "view": "singleValue", "region": "us-east-1", "stat": "Sum", "period": 10800,
+        "metrics": [["AWS/Lambda", "Invocations", "FunctionName", "MedicalReportProcessor"]]
+      }
+    },
+    {
+      "type": "metric", "x": 6, "y": 8, "width": 6, "height": 4,
+      "properties": {
+        "title": "Total errors (3h)", "view": "singleValue", "region": "us-east-1", "stat": "Sum", "period": 10800,
+        "metrics": [["AWS/Lambda", "Errors", "FunctionName", "MedicalReportProcessor", {"color": "#d62728"}]]
+      }
+    },
+    {
+      "type": "metric", "x": 12, "y": 8, "width": 6, "height": 4,
+      "properties": {
+        "title": "Avg duration ms (3h)", "view": "singleValue", "region": "us-east-1", "stat": "Average", "period": 10800,
+        "metrics": [["AWS/Lambda", "Duration", "FunctionName", "MedicalReportProcessor"]]
+      }
+    },
+    {
+      "type": "metric", "x": 18, "y": 8, "width": 6, "height": 4,
+      "properties": {
+        "title": "Success rate % (3h)", "view": "singleValue", "region": "us-east-1", "period": 10800,
+        "metrics": [
+          ["AWS/Lambda", "Invocations", "FunctionName", "MedicalReportProcessor", {"id": "inv", "stat": "Sum", "visible": false}],
+          ["AWS/Lambda", "Errors", "FunctionName", "MedicalReportProcessor", {"id": "err", "stat": "Sum", "visible": false}],
+          [{"expression": "100 - 100 * err / inv", "label": "Success %", "id": "rate", "color": "#2ca02c"}]
+        ]
+      }
+    },
+    {
+      "type": "log", "x": 0, "y": 12, "width": 24, "height": 6,
+      "properties": {
+        "title": "Execution logs – errors & rejected uploads",
+        "region": "us-east-1", "view": "table",
+        "query": "SOURCE '/aws/lambda/MedicalReportProcessor' | fields @timestamp, @message | filter @message like /ERROR|VALIDATION FAILED|Traceback/ | sort @timestamp desc | limit 50"
+      }
+    },
+    {
+      "type": "log", "x": 0, "y": 18, "width": 24, "height": 6,
+      "properties": {
+        "title": "Execution logs – uploaded files processed",
+        "region": "us-east-1", "view": "table",
+        "query": "SOURCE '/aws/lambda/MedicalReportProcessor' | fields @timestamp, @message | filter @message like /NEW FILE UPLOADED|PROCESSED OK/ | sort @timestamp desc | limit 50"
+      }
+    }
+  ]
+}

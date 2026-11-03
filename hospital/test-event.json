@@ -1,0 +1,1 @@
+{"Records":[{"eventName":"ObjectCreated:Put","eventTime":"2026-10-21T04:20:00Z","s3":{"bucket":{"name":"hospital-medical-records-937083180364"},"object":{"key":"medical-reports/medical-report.pdf","size":1839}}}]}
