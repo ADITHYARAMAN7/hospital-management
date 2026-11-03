@@ -1,0 +1,26 @@
+# Credentials and runtime secrets
+cli-admin_accessKeys.csv
+**/db-secret.json
+**/api-env.json
+**/.env
+**/.env.*
+
+# Deployment state and generated AWS configuration
+hospital/state.json
+hospital/out.json
+hospital/dist/
+hospital/*.zip
+
+# Local dependency/build output
+hospital/build_api/
+**/__pycache__/
+*.py[cod]
+
+# Generated or potentially sensitive demo media
+hospital/files/
+
+# Editor/OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
